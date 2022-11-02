@@ -1,12 +1,15 @@
 const express = require('express');
 const { Server } = require('socket.io');
+const cors = require('cors');
 const PORT = 5050; // No cambiar
-const SERVER_IP = '192.168.80.31'; // Cambiar por la IP del computador
+// '192.168.80.31'; // Cambiar por la IP del computador
 
 const os = require('os');
 const IPaddress = os.networkInterfaces().en0[1].address;
+const SERVER_IP = IPaddress;
 
 const app = express();
+app.use(cors({ origin: "*" }));
 app.use(express.json());
 app.use('/app', express.static('public-app'));
 app.use('/mupi', express.static('public-mupi'));
@@ -18,6 +21,11 @@ const httpServer = app.listen(PORT, () => {
 // Run on terminal: ngrok http 5050;
 
 const io = new Server(httpServer, { path: '/real-time' });
+
+app.post('/user', (request, response) => {
+    console.log(request.body);
+    response.end();
+})
 
 io.on('connection', socket => {
     console.log(socket.id);

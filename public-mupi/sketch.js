@@ -1,4 +1,6 @@
-const NGROK = `https://${window.location.hostname}`;
+const NGROK = `${window.location.hostname}`;
+//const NGROK = `https://${window.location.hostname}`;
+//let socket = io(`${window.location.hostname}:5050`, { path: '/real-time' }); 
 let socket = io(NGROK, { path: '/real-time' });
 console.log('Server IP: ', NGROK);
 
@@ -69,8 +71,8 @@ socket.on('mupi-instructions', instructions => {
 });
 
 socket.on('mupi-size', deviceSize => {
-    let { windowWidth, windowHeight } = deviceSize;
+    let { deviceType, windowWidth, windowHeight } = deviceSize;
     deviceWidth = windowWidth;
     deviceHeight = windowHeight;
-    console.log(`User is using a smartphone size of ${deviceWidth} and ${deviceHeight}`);
+    console.log(`User is using an ${deviceType} smartphone size of ${deviceWidth} and ${deviceHeight}`);
 });

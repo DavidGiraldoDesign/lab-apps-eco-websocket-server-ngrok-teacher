@@ -1,9 +1,9 @@
-const NGROK = `https://${window.location.hostname}`;
+const NGROK = `${window.location.hostname}`;
 console.log('Server IP: ', NGROK);
 let socket = io(NGROK, { path: '/real-time' });
 
 let controllerX, controllerY = 0;
-let interactions = 2;
+let interactions = 0;
 let isTouched = false;
 
 function setup() {
@@ -18,12 +18,22 @@ function setup() {
     background(0);
     angleMode(DEGREES);
 
-    socket.emit('device-size', {windowWidth, windowHeight});
+    const userAgent = window.navigator.userAgent;
+    let deviceType;
+
+    if (/iPhone|iPad|iPod/.test(userAgent)) {
+        deviceType = 'iOS';
+    } else if (/Android/.test(userAgent)) {
+        deviceType = 'Android';
+    } else {
+        deviceType = 'Other';
+    }
+    socket.emit('device-size', { deviceType, windowWidth, windowHeight });
 
     let btn = createButton("Permitir movimiento");
-	btn.mousePressed(function(){
-		DeviceOrientationEvent.requestPermission();
-	});
+    btn.mousePressed(function () {
+        DeviceOrientationEvent.requestPermission();
+    });
 
 }
 
@@ -47,11 +57,11 @@ function touchMoved() {
     }
 }
 
-function touchStarted(){
+function touchStarted() {
     isTouched = true;
 }
 
-function touchEnded(){
+function touchEnded() {
     isTouched = false;
 }
 
@@ -66,7 +76,7 @@ function deviceMoved() {
             background(0, 255, 0);
             break;
     }
-    
+
 }
 
 function deviceShaken() {

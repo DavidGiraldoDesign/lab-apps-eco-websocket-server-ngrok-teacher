@@ -1,10 +1,6 @@
-const express = require('express');
-const { Server } = require('socket.io');
-const cors = require('cors');
+import { express, Server, cors, os } from './dependencies.js'
 const PORT = 5050; // No cambiar
 // '192.168.80.31'; // Cambiar por la IP del computador
-
-const os = require('os');
 const IPaddress = os.networkInterfaces().en0[1].address;
 const SERVER_IP = IPaddress;
 
@@ -15,8 +11,10 @@ app.use('/app', express.static('public-app'));
 app.use('/mupi', express.static('public-mupi'));
 
 const httpServer = app.listen(PORT, () => {
-    console.log(`http://${SERVER_IP}:${PORT}/app`);
-    console.log(`http://${SERVER_IP}:${PORT}/mupi`);
+    console.log(`Server is running, host http://${SERVER_IP}:${PORT}/`);
+    console.table({ 
+        'Client Endpoint' : `http://${SERVER_IP}:${PORT}/app`,
+        'Mupi Endpoint': `http://${SERVER_IP}:${PORT}/mupi` });
 });
 // Run on terminal: ngrok http 5050;
 
